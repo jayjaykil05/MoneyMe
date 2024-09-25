@@ -1,0 +1,257 @@
+﻿@model MoneyMe.Models.User
+
+@{
+    ViewData["Title"] = "Create";
+}
+<head>
+    <style>
+        .xxxx {
+            border: 2px solid #007bff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+
+<div class="container xxxx">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-6" style="padding: 0px">
+            <h1>Create Loan Account</h1>
+            <hr />
+            <div class="row mb-3">
+                <div class="form-floating col-2 ">
+                    <select id="titleDropdown" class="form-control">
+                        <option selected value="mr">Mr.</option>
+                        <option value="mrs">Mrs.</option>
+                        <option value="ms">Ms.</option>
+                        <option value="dr">Dr.</option>
+                    </select>
+                    <label class="px-4" for="floatingInput">Title</label>
+                </div>
+                <div class="form-floating col-5 ">
+                    <input type="text" class="form-control" id="fnameInput" placeholder="John">
+                    <label class="px-4" for="fnameInput">First Name</label>
+                </div>
+                <div class="form-floating col-5 ">
+                    <input type="text" class="form-control" id="lnameInput" placeholder="Smith">
+                    <label class="px-4" for="lnameInput">Last Name</label>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="form-floating col-3 ">
+                    <input type="date" class="form-control" id="bdayInput" placeholder="Your Birthday">
+                    <label class="px-4" for="bdayInput">Birthday</label>
+                </div>
+                <div class="form-floating col-6 ">
+                    <input type="email" class="form-control" id="emailInput" placeholder="Your email">
+                    <label class="px-4" for="emailInput">Email</label>
+                </div>
+                <div class="form-floating col-3 ">
+                    <input type="text" class="form-control" id="mnumInput" placeholder="Mobile Number">
+                    <label class="px-4" for="mnumInput">Mobile Number</label>
+                </div>
+            </div>
+            <div class="row justify-content-md-center mb-3">
+                <div class="form-floating col-5 gx-1">
+                    <input type="number" class="form-control qty-input"  id="termInput" placeholder="Term">
+                    <label for="termInput">Term</label>
+                </div>
+            </div>
+            <div class="row justify-content-md-center mb-3">
+                <div class="form-floating col-5 gx-1">
+                    <input type="text" class="form-control qty-input" onfocusout="formatCurrencyNumber(this)" id="amountInput" placeholder="Amount">
+                    <label for="amountInput">Amount</label>
+                </div>
+            </div>
+            <div class="row">
+                <input value="Submit" id="btnSave" class="btn btn-primary" />
+            </div>
+            <br />
+            <div>
+                <a asp-controller="Home" asp-action="Index">Back to Home </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+
+        function isValidEmail(email) {
+            const emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            return emailPattern.test(email);
+        }
+
+        function isEighteen(input) {
+            const birthDate = new Date(input);
+            const today = new Date();
+
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            console.log(age);
+            return age >= 18 ? true : false;
+
+        }
+
+        function removeCommas(numberString) {
+            return parseFloat(numberString.replace(/,/g, ''));
+        }
+
+        function formatCurrencyNumber(input) {
+            // Remove all non-numeric characters except for the decimal point
+            let value = input.value.replace(/[^0-9.]/g, '');
+
+            // Split the number into integer and decimal parts
+            let parts = value.split('.');
+            let integerPart = parts[0];
+            let decimalPart = parts.length > 1 ? '.' + parts[1].slice(0, 2) : '';
+
+            if (!decimalPart) {
+                decimalPart = '.00';
+            } else if (parts[1].length === 1) {
+                decimalPart += '0';
+            }
+
+            // Add commas to the integer part
+            let formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+
+
+            // Set the formatted value back to the input
+            input.value = formattedInteger + decimalPart;
+        }
+        $(document).ready(function () {
+
+
+
+
+            $('#btnSave').click(function () {
+                var completeDetails = true;
+                var errorMessage = ""
+                var titleDropdown = $('#titleDropdown');
+                var fnameInput = $('#fnameInput');
+                var lnameInput = $('#lnameInput');
+                var emailInput = $("#emailInput");
+                var mnumInput = $('#mnumInput');
+                var termInput = $("#termInput");
+                var amountInput = $("#amountInput");
+                var bdayInput = $("#bdayInput");
+                var email = String(emailInput.val());
+                var domain = email.split('@@')[1];
+
+                var saveCustomer = {
+                    "AmountRequired": removeCommas( amountInput.val()),
+                    "Term": termInput.val(),
+                    "Title": titleDropdown.val(),
+                    "FirstName": fnameInput.val(),
+                    "LastName": lnameInput.val(),
+                    "DateOfBirth": bdayInput.val(),
+                    "Mobile": mnumInput.val(),
+                    "Email": emailInput.val(),
+                }
+                if (!fnameInput.val()) {
+                    errorMessage = "First Name is Required";
+                    completeDetails = false;
+                }
+                else if (!lnameInput.val()) {
+                    errorMessage = "Last Name is Required";
+                    completeDetails = false;
+                }
+                else if (!bdayInput.val()) {
+                    errorMessage = "Birthday is Required";
+                    completeDetails = false;
+                }
+                else if (!emailInput.val()) {
+                    errorMessage = "email is Required";
+                    completeDetails = false;
+                }
+                else if (!mnumInput.val()) {
+                    errorMessage = "Mobile Number is Required";
+                    completeDetails = false;
+                }
+
+                if (!completeDetails) {
+                    Swal.fire({
+                        title: errorMessage,
+                        allowOutsideClick: true,
+                        icon: 'warning'
+                    });
+
+                }
+                else {
+                    console.log("saveCustomer", saveCustomer)
+                    Swal.fire({
+                        title: 'Submit',
+                        text: "Would You Like To Submit?",
+                        icon: 'question',
+                        showCancelButton: true,
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes',
+                        showLoaderOnConfirm: true,
+                        preConfirm: () => {
+                            return new Promise(async (resolve) => {
+                                try {
+                                    const response = await $.ajax({
+                                        type: "POST",
+                                        url: "/Customer/SubmitUser",
+                                        data: JSON.stringify(saveCustomer),
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                    });
+
+                                    // Check if the response is successful and resolve with the message and title
+                                    if (response.isSuccess) {
+                                        resolve({ message: response.message, icon: 'success', title: "Success!", id: response.id });
+                                    } else {
+                                        resolve({ message: response.message, icon: 'error', title: "Failed!" });
+                                    }
+                                } catch (error) {
+                                    resolve({ message: "Failed to Save", icon: 'error' });
+                                };
+                            })
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        const { message, title, icon, id } = result.value;
+
+                        if (icon == 'success') {
+                            Swal.fire({
+                                title: title,
+                                text: message,
+                                allowOutsideClick: false,
+                                icon: icon,
+                                customClass: {
+                                    container: 'custom-swal'
+                                }
+                            }).then(function () {
+                                window.location.href = `/Customer/ViewAccount?id=` + id;
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                title: title,
+                                text: message,
+                                allowOutsideClick: true,
+                                icon: icon,
+                            });
+                        }
+                    });
+
+                 
+                }
+
+            });
+        });
+
+    </script>
+}

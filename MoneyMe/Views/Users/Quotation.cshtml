@@ -1,0 +1,555 @@
+﻿@model MoneyMe.ViewModels.CustomerAccountViewModel
+
+
+@{
+    ViewData["Title"] = "Edit";
+    var fullName = Model.FirstName + " " + Model.LastName;
+}
+<head>
+    <style>
+        .xxxx {
+            border: 2px solid #007bff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<div class="container xxxx">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-6" style="padding: 0px">
+            <h1>Your Quote</h1>
+            <hr />
+            <div class="row mb-3">
+                <div class="form-floating col-10 ">
+                    <h3>Your Information</h3>
+                </div>
+                <div class="form-floating col-2 ">
+                    <div>
+                        <button class="form-control btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#personalInfoModal">Edit</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row mb-3 d-none">
+                <input id="txtCurrentFname" asp-for="FirstName" />
+                <input id="txtCurrentLname" asp-for="LastName" />
+                <input id="txtCurrentMobile" asp-for="Mobile" />
+                <input id="txtCurrentEmail" asp-for="Email" />
+                <input id="txtCurrentTitle" asp-for="Title" />
+                <input id="txtCurrentDOB" asp-for="DateOfBirth" />
+                <input id="txtCurrentTRepay" asp-for="TotalRepayments" />
+                <input id="txtCurrentEFee" asp-for="EstablishmentFee" />
+                <input id="txtCurrentInt" asp-for="Interest" />
+            </div>
+            <div class="row mb-3">
+                <div class="form-floating col-4 ">
+                    <h5>Name</h5>
+                </div>
+                <div class="form-floating col-8 ">
+                    <h5 class="text-end" id="lblFullName">@fullName</h5>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="form-floating col-4 ">
+                    <h5>Mobile</h5>
+                </div>
+                <div class="form-floating col-8 ">
+                    <h5 class="text-end" id="lblMobile">@Model.Mobile</h5>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="form-floating col-4 ">
+                    <h5>Email</h5>
+                </div>
+                <div class="form-floating col-8 ">
+                    <h5 class="text-end" id="lblEmail">@Model.Email</h5>
+                </div>
+            </div>
+            <br />
+            <div class="row mb-3">
+                <div class="form-floating col-10 ">
+                    <h3>Finance Details</h3>
+                </div>
+                <div class="form-floating col-2 ">
+                    <div>
+                        <button class="form-control btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#loanInfoModal">Edit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-floating col-4 ">
+                    <h5>Finance Amount</h5>
+                </div>
+                <div class="form-floating col-8 ">
+                    <h5 id="lblAmount" class="text-end">@Model.AmountRequired</h5>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="form-floating col ">
+                    <h6 class="text-end">over @Model.Term months</h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-floating col-4 ">
+                    <h5>Repayments From</h5>
+                </div>
+                <div class="form-floating col-8 ">
+                    <h5 id="lblAmountMonthly" class="text-end">@Model.MonthlyAmount</h5>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="form-floating col ">
+                    <h6 class="text-end">Monthly</h6>
+                </div>
+            </div>
+            <div class="row  ">
+                <div class="d-flex justify-content-center">
+                    <input value="Apply now" id="btnSave" class="btn btn-success" />
+                </div>
+                <div class="d-flex justify-content-center">
+                    <label class="fs-6"></label>
+                </div>
+            </div>
+            <br />
+            <div class="row text-center">
+                <h6 id="terms1">{id2}</h6>
+                <h6 id="terms2">interest of {id}. The Repayment amount is based on the variables</h6>
+                <h6 id="terms3">selected, is subject to our assessment and suitability, and other important</h6>
+                <h6 id="terms4">terms and conditions apply</h6>
+            </div>
+        </div>
+        <div class="modal fade" id="personalInfoModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="personalInfoLbl">Personal Information</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="form-floating col-2 ">
+                                <select id="titleDropdown" class="form-control" asp-for="Title">
+                                    <option value="mr">Mr.</option>
+                                    <option value="mrs">Mrs.</option>
+                                    <option value="ms">Ms.</option>
+                                    <option value="dr">Dr.</option>
+                                </select>
+                                <label class="px-4" for="floatingInput">Title</label>
+                            </div>
+                            <div class="form-floating col-5 ">
+                                <input type="text" class="form-control" id="fnameInput" placeholder="John" asp-for="FirstName">
+                                <label class="px-4" for="fnameInput">First Name</label>
+                            </div>
+                            <div class="form-floating col-5 ">
+                                <input type="text" class="form-control" id="lnameInput" placeholder="Smith" asp-for="LastName">
+                                <label class="px-4" for="lnameInput">Last Name</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="form-floating col-4 ">
+                                <input type="date" class="form-control" id="bdayInput" placeholder="Your Birthday" asp-for="DateOfBirth">
+                                <label class="px-4" for="bdayInput">Birthday</label>
+                            </div>
+                            <div class="form-floating col-4 ">
+                                <input type="email" class="form-control" id="emailInput" placeholder="Your email" asp-for="Email">
+                                <label class="px-4" for="emailInput">Email</label>
+                            </div>
+                            <div class="form-floating col-4 ">
+                                <input type="text" class="form-control" id="mnumInput" placeholder="Mobile Number" asp-for="Mobile">
+                                <label class="px-4" for="mnumInput">Mobile Number</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnUpdatePersonal" class="btn btn-primary">Update </button>
+                        <button type="button" id="btnClosePersonal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="loanInfoModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="loanInfoLbl">Loan Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="form-floating col ">
+                                <select id="prodDropdown" class="form-control" asp-for="ProductId" asp-items="ViewBag.ProductList"></select>
+
+                                <label class="px-4" for="floatingInput">Product</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="range-slider">
+                                <label for="customRange3" class="form-label ">Amount</label>
+                                <div class="tooltip"></div>
+                                <input type="range" class="range" min="2100" max="15000" step="100" id="amountRange" asp-for="AmountRequired">
+                                <div class="row">
+                                    <span class="col-4">$2,100</span>
+                                    <span class="col-4" id="rangeValue"></span>
+                                    <span class="col-4" style="text-align:end">$15,000</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="range-slider">
+                                <label for="customRange3" class="form-label ">Terms</label>
+
+                                <div class="tooltip"></div>
+                                <input class="range" type="range" id="termRange" asp-for="Term" min="1" max="36" step="1">
+                                <div class="row">
+                                    <span class="col-4">1 mo.</span>
+                                    <span class="col-4" id="rangeValue"></span>
+                                    <span class="col-4" style="text-align:end">36 mos</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btnUpdateLoan">Update</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function formatCurrencyNumber2(input) {
+            // Remove all non-numeric characters except for the decimal point
+            let value = input.replace(/[^0-9.]/g, '');
+
+            // Split the number into integer and decimal parts
+            let parts = value.split('.');
+            let integerPart = parts[0];
+            let decimalPart = parts.length > 1 ? '.' + parts[1].slice(0, 2) : '';
+
+            if (!decimalPart) {
+                decimalPart = '.00';
+            } else if (parts[1].length === 1) {
+                decimalPart += '0';
+            }
+
+            // Add commas to the integer part
+            let formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+            // Set the formatted value back to the input
+            input = formattedInteger + decimalPart;
+
+            return input;
+        }
+
+        function isValidEmail(email) {
+            const emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            return emailPattern.test(email);
+        }
+
+        function isEighteen(input) {
+            const birthDate = new Date(input);
+            const today = new Date();
+
+            console.log(input);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age >= 18 ? true : false;
+
+        }
+        $(document).ready(function () {
+            $("#lblAmount").text("$" + formatCurrencyNumber2("@Model.AmountRequired"));
+            $("#lblAmountMonthly").text("$" + formatCurrencyNumber2("@Model.MonthlyAmount"));
+            var terms1 = $('#terms1').html();
+            var terms2 = $('#terms2').html();
+            var totalRepayments = $('#txtCurrentTRepay');
+            var establishmentFee = $('#txtCurrentEFee');
+            var interest = $('#txtCurrentInt');
+
+
+            $('#terms1').html(terms1.replace("{id2}", "Total repayments $" + formatCurrencyNumber2(totalRepayments.val()) + ", made up of an establishment fee of $" + formatCurrencyNumber2(establishmentFee.val()) + ","));
+            $('#terms2').html(terms2.replace("{id}", "$"+formatCurrencyNumber2(interest.val())));
+
+            const sliders = document.querySelectorAll('.range');
+            var titleDropdown = $('#titleDropdown');
+            var bdayInput = $("#bdayInput");
+            var fnameInput = $('#fnameInput');
+            var lnameInput = $('#lnameInput');
+            var emailInput = $("#emailInput");
+            var mnumInput = $('#mnumInput');
+            var amountInput = $("#amountRange");
+            var termInput = $("#termRange");
+            var prodDropdown = $('#prodDropdown');
+            var email = String(emailInput.val());
+            var domain = email.split('@@')[1];
+
+            sliders.forEach(slider => {
+                const tooltip = slider.parentElement.querySelector('.tooltip');
+
+                const setValue = () => {
+                    const newValue = Number((slider.value - slider.min) * 100 / (slider.max - slider.min));
+                    const newPosition = 16 - (newValue * 0.32);
+
+                    // Get the slider's ID
+                    var tooltipVal = "";
+                    if (slider.id == "amountRange") {
+                        tooltipVal = "$" + formatCurrencyNumber2(slider.value);
+                    }
+                    else {
+                        tooltipVal = slider.value + " mos.";
+                    }
+                    // Update tooltip text and position
+                    tooltip.innerHTML = `<span>${tooltipVal}</span>`;
+                    tooltip.style.left = `calc(${newValue}% + (${newPosition}px))`;
+                    tooltip.style.display = 'block'; // Ensure tooltip is displayed
+
+
+                    // Create a unique property for each slider to avoid interference
+                    slider.style.setProperty("--range-progress", `${newValue}%`);
+                };
+
+                slider.addEventListener('input', setValue);
+                setValue(); // Set initial value
+            });
+
+            $('#btnUpdatePersonal').click(function () {
+                var updateCustomer = {
+                    "Title": titleDropdown.val(),
+                    "FirstName": fnameInput.val(),
+                    "LastName": lnameInput.val(),
+                    "DateOfBirth": bdayInput.val(),
+                    "Mobile": mnumInput.val(),
+                    "Email": emailInput.val(),
+                    "UserId": "@Model.UserId",
+                }
+                $.ajax({
+                    url: '/Customer/UpdatetUser',
+                    type: 'POST',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(updateCustomer),
+                    success: function (response) {
+                        if (response.isSuccess) {
+                            location.reload();
+                        }
+                        else {
+                            Swal.fire({
+                                title: "Failed!",
+                                allowOutsideClick: true,
+                                icon: 'error'
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        Swal.fire({
+                            title: "Failed to Check!",
+                            allowOutsideClick: true,
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+            $('#btnClosePersonal').click(function () {
+
+                var bday = ($("#txtCurrentDOB").val()).split('T')[0];
+
+                titleDropdown.val($("#txtCurrentTitle").val());
+                fnameInput.val($("#txtCurrentFname").val());
+                lnameInput.val($("#txtCurrentLname").val());
+                bdayInput.val(bday);
+                mnumInput.val($("#txtCurrentMobile").val());
+                emailInput.val($("#txtCurrentEmail").val());
+
+            });
+
+            $('#btnUpdateLoan').click(function () {
+                var updateCustomer = {
+                    "UserId": "@Model.UserId",
+                    "LoanId": "@Model.LoanId",
+                    "FinanceAmount": amountInput.val(),
+                    "Term": termInput.val(),
+                    "ProductId": prodDropdown.val(),
+                }
+                $.ajax({
+                    url: '/Customer/UpdateLoan',
+                    type: 'POST',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(updateCustomer),
+                    success: function (response) {
+                        if (response.isSuccess) {
+                            location.reload();
+                        }
+                        else {
+                            Swal.fire({
+                                title: "Failed!",
+                                allowOutsideClick: true,
+                                icon: 'error'
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        Swal.fire({
+                            title: "Failed to Check!",
+                            allowOutsideClick: true,
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+
+            $('#btnSave').click(function () {
+
+                var saveQuote = {
+                    "UserId": "@Model.UserId",
+                    "AmountRequired": amountInput.val(),
+                    "Term": termInput.val(),
+                    "Title": titleDropdown.val(),
+                    "FirstName": fnameInput.val(),
+                    "LastName": lnameInput.val(),
+                    "DateOfBirth": bdayInput.val(),
+                    "Mobile": mnumInput.val(),
+                    "Email": emailInput.val(),
+                    "ProductId": prodDropdown.val(),
+                }
+                console.log("asfdasdf", saveQuote)
+
+                if (isEighteen(bdayInput.val())) {
+                    if (isValidEmail(emailInput.val())) {
+                        $.ajax({
+                            url: '/Customer/IsBlackListed',
+                            type: 'GET',
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            data: {
+                                value: domain,
+                                type: 'Email',
+                            },
+                            success: function (response) {
+                                console.log("asfdasdf", response)
+                                if (response.isBlackListed) {
+                                    Swal.fire({
+                                        title: "Email domain is Blacklisted!",
+                                        allowOutsideClick: true,
+                                        icon: 'error'
+                                    });
+                                }
+                                else {
+                                    $.ajax({
+                                        url: '/Customer/IsBlackListed',
+                                        type: 'GET',
+                                        dataType: "json",
+                                        contentType: "application/json; charset=utf-8",
+                                        data: {
+                                            value: mnumInput.val(),
+                                            type: 'Mobile',
+                                        },
+                                        success: function (response) {
+                                            console.log("asfdasdf", response)
+
+                                            if (response.isBlackListed) {
+                                                Swal.fire({
+                                                    title: "Mobile Number is Blacklisted!",
+                                                    allowOutsideClick: true,
+                                                    icon: 'error'
+                                                });
+                                            }
+                                            else {
+                                                Swal.fire({
+                                                    title: 'Apply Now',
+                                                    icon: 'question',
+                                                    showCancelButton: true,
+                                                    cancelButtonColor: '#d33',
+                                                    confirmButtonText: 'Yes',
+                                                    showLoaderOnConfirm: true,
+                                                    preConfirm: () => {
+                                                        return new Promise(async (resolve) => {
+                                                            try {
+                                                                const response = await $.ajax({
+                                                                    type: "POST",
+                                                                    url: "/Customer/ApplyNow",
+                                                                    data: JSON.stringify(saveQuote),
+                                                                    contentType: "application/json; charset=utf-8",
+                                                                    dataType: "json",
+                                                                });
+
+                                                                // Check if the response is successful and resolve with the message and title
+                                                                if (response.isSuccess) {
+                                                                    resolve({ message: response.message, icon: 'success', title: "Success!", id: response.id });
+                                                                } else {
+                                                                    resolve({ message: response.message, icon: 'error', title: "Failed!" });
+                                                                }
+                                                            } catch (error) {
+                                                                resolve({ message: "Failed to Save", icon: 'error' });
+                                                            };
+                                                        })
+                                                    },
+                                                    allowOutsideClick: () => !Swal.isLoading()
+                                                }).then((result) => {
+                                                    const { message, title, icon, id } = result.value;
+
+                                                    // $('#saveModal').modal('show');
+                                                    if (icon == 'success') {
+                                                        window.location = "/Customer/Congrats"
+                                                    }
+                                                    else {
+                                                        Swal.fire({
+                                                            title: title,
+                                                            text: message,
+                                                            allowOutsideClick: true,
+                                                            icon: icon,
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        error: function (data) {
+                                            Swal.fire({
+                                                title: "Failed to Check!",
+                                                allowOutsideClick: true,
+                                                icon: 'error'
+                                            });
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (data) {
+                                Swal.fire({
+                                    title: "Failed to Check!",
+                                    allowOutsideClick: true,
+                                    icon: 'error'
+                                });
+                            }
+                        });
+
+                    }
+                    else {
+                        Swal.fire({
+                            title: "Must Be A Valid Email!",
+                            allowOutsideClick: true,
+                            icon: 'error'
+                        });
+                    }
+                }
+                else {
+                    Swal.fire({
+                        title: "Must Be 18 yrs old to Create a Loan Account!",
+                        allowOutsideClick: true,
+                        icon: 'error'
+                    });
+                }
+            });
+        });
+    </script>
+}

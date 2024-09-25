@@ -1,0 +1,504 @@
+﻿@model MoneyMe.ViewModels.CustomerAccountViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<head>
+    <style>
+        .xxxx {
+            border: 2px solid #007bff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<div class="container xxxx">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-6" style="padding: 0px">
+            <h1 >Quote Calculator</h1>
+            <hr />
+            <div class="row mb-3">
+                <div class="form-floating col ">
+                    <select id="prodDropdown" class="form-control" asp-items="ViewBag.ProductList"></select>
+                 
+                    <label class="px-4" for="floatingInput">Product</label>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="range-slider">
+                    <label for="customRange3" class="form-label ">Amount</label>
+                    <div class="tooltip"></div>
+                    <input type="range" class="range" min="2100" max="15000" step="100" id="amountRange" value="@Model.AmountRequired" >
+                    <div class="row">
+                        <span class="col-4">$2,100</span>
+                        <span class="col-4" id="rangeValue"></span>
+                        <span class="col-4" style="text-align:end">$15,000</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="range-slider">
+                    <label for="customRange3" class="form-label ">Terms</label>
+
+                    <div class="tooltip"></div>
+                    <input class="range" type="range" id="termRange" value="@Model.Term" min="1" max="36" step="1">
+                    <div class="row">
+                        <span class="col-4">1 mo.</span>
+                        <span class="col-4" id="rangeValue"></span>
+                        <span class="col-4" style="text-align:end">36 mos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="form-floating col-2 ">
+                    <select id="titleDropdown" class="form-control" asp-for="Title">
+                        <option value="mr">Mr.</option>
+                        <option value="mrs">Mrs.</option>
+                        <option value="ms">Ms.</option>
+                        <option value="dr">Dr.</option>
+                    </select>
+                    <label class="px-4" for="floatingInput">Title</label>
+                </div>
+                <div class="form-floating col-5 ">
+                    <input type="text" class="form-control" id="fnameInput" placeholder="John" asp-for="FirstName">
+                    <label class="px-4" for="fnameInput">First Name</label>
+                </div>
+                <div class="form-floating col-5 ">
+                    <input type="text" class="form-control" id="lnameInput" placeholder="Smith" asp-for="LastName">
+                    <label class="px-4" for="lnameInput">Last Name</label>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="form-floating col-3 ">
+                    <input type="date" class="form-control" id="bdayInput" placeholder="Your Birthday" asp-for="DateOfBirth">
+                    <label class="px-4" for="bdayInput">Birthday</label>
+                </div>
+                <div class="form-floating col-6 ">
+                    <input type="email" class="form-control" id="emailInput" placeholder="Your email" asp-for="@Model.Email">
+                    <label class="px-4" for="emailInput">Email</label>
+                </div>
+                <div class="form-floating col-3 ">
+                    <input type="text" class="form-control" id="mnumInput" placeholder="Mobile Number" asp-for="@Model.Mobile">
+                    <label class="px-4" for="mnumInput">Mobile Number</label>
+                </div>
+            </div>
+            <div class="row  ">
+                <div class="d-flex justify-content-center">
+                    <input value="Calculate quote" id="btnSave" class="btn btn-success" />
+                </div>
+                <div class="d-flex justify-content-center">
+                    <label class="fs-6" for="mnumInput">Quote does not affect your credit score</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        function isValidEmail(email) {
+            const emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            return emailPattern.test(email);
+        }
+
+        function isEighteen(input) {
+            const birthDate = new Date(input);
+            const today = new Date();
+            console.log(input);
+
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            console.log(age);
+            return age >= 18 ? true : false;
+
+        }
+
+        function formatCurrencyNumber(input) {
+            console.log("ss", input.value)
+            var ss = input.value + "";
+            // Remove all non-numeric characters except for the decimal point
+            let value = input.value.replace(/[^0-9.]/g, '');
+
+            // Split the number into integer and decimal parts
+            let parts = value.split('.');
+            let integerPart = parts[0];
+            let decimalPart = parts.length > 1 ? '.' + parts[1].slice(0, 2) : '';
+
+            if (!decimalPart) {
+                decimalPart = '.00';
+            } else if (parts[1].length === 1) {
+                decimalPart += '0';
+            }
+
+            // Add commas to the integer part
+            let formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+
+
+            // Set the formatted value back to the input
+            input.value = formattedInteger + decimalPart;
+        }
+
+        function formatCurrencyNumber2(input) {
+            // Remove all non-numeric characters except for the decimal point
+            let value = input.replace(/[^0-9.]/g, '');
+
+            // Split the number into integer and decimal parts
+            let parts = value.split('.');
+            let integerPart = parts[0];
+            let decimalPart = parts.length > 1 ? '.' + parts[1].slice(0, 2) : '';
+
+            if (!decimalPart) {
+                decimalPart = '.00';
+            } else if (parts[1].length === 1) {
+                decimalPart += '0';
+            }
+
+            // Add commas to the integer part
+            let formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+
+
+            // Set the formatted value back to the input
+            input = formattedInteger + decimalPart;
+
+            return input;
+        }
+
+        $(document).ready(function () {
+            const sliders = document.querySelectorAll('.range');
+
+            sliders.forEach(slider => {
+                const tooltip = slider.parentElement.querySelector('.tooltip');
+
+                const setValue = () => {
+                    const newValue = Number((slider.value - slider.min) * 100 / (slider.max - slider.min));
+                    const newPosition = 16 - (newValue * 0.32);
+
+                    // Get the slider's ID
+                    var tooltipVal = "";
+                    if (slider.id == "amountRange") {
+                        tooltipVal = "$" + formatCurrencyNumber2(slider.value);
+                    }
+                    else {
+                        tooltipVal = slider.value + " mos.";
+                    }
+                    // Update tooltip text and position
+                    tooltip.innerHTML = `<span>${tooltipVal}</span>`;
+                    tooltip.style.left = `calc(${newValue}% + (${newPosition}px))`;
+                    tooltip.style.display = 'block'; // Ensure tooltip is displayed
+
+
+                    // Create a unique property for each slider to avoid interference
+                    slider.style.setProperty("--range-progress", `${newValue}%`);
+                };
+
+                slider.addEventListener('input', setValue);
+                setValue(); // Set initial value
+            });
+
+            $('#btnSave').click(function () {
+                var completeDetails = true;
+                var errorMessage = ""
+                var titleDropdown = $('#titleDropdown');
+                var prodDropdown = $('#prodDropdown');
+                var fnameInput = $('#fnameInput');
+                var lnameInput = $('#lnameInput');
+                var emailInput = $("#emailInput");
+                var mnumInput = $('#mnumInput');
+                var termInput = $("#termRange");
+                var amountInput = $("#amountRange");
+                var bdayInput = $("#bdayInput");
+                var email = String(emailInput.val());
+                var domain = email.split('@@')[1];
+
+                var saveCustomer = {
+                    "UserId":"@Model.UserId",
+                    "AmountRequired": amountInput.val(),
+                    "Term": termInput.val(),
+                    "Title": titleDropdown.val(),
+                    "FirstName": fnameInput.val(),
+                    "LastName": lnameInput.val(),
+                    "DateOfBirth": bdayInput.val(),
+                    "Mobile": mnumInput.val(),
+                    "Email": emailInput.val(),
+                    "Product": prodDropdown.val(),
+                }
+                if (!fnameInput.val()) {
+                    errorMessage = "First Name is Required";
+                    completeDetails = false;
+                }
+                else if (!lnameInput.val()) {
+                    errorMessage = "Last Name is Required";
+                    completeDetails = false;
+                }
+                else if (!bdayInput.val()) {
+                    errorMessage = "Birthday is Required";
+                    completeDetails = false;
+                }
+                else if (!emailInput.val()) {
+                    errorMessage = "email is Required";
+                    completeDetails = false;
+                }
+                else if (!mnumInput.val()) {
+                    errorMessage = "Mobile Number is Required";
+                    completeDetails = false;
+                }
+
+                if (!completeDetails) {
+                    Swal.fire({
+                        title: errorMessage,
+                        allowOutsideClick: true,
+                        icon: 'warning'
+                    });
+
+                }
+                else {
+                    if (isEighteen(bdayInput.val())) {
+                        if (isValidEmail(email)) {
+                            $.ajax({
+                                url: '/Customer/IsBlackListed',
+                                type: 'GET',
+                                dataType: "json",
+                                contentType: "application/json; charset=utf-8",
+                                data: {
+                                    value: domain,
+                                    type: 'Email',
+                                },
+                                success: function (response) {
+                                    console.log("asfdasdf", response)
+                                    if (response.isBlackListed) {
+                                        Swal.fire({
+                                            title: "Email domain is Blacklisted!",
+                                            allowOutsideClick: true,
+                                            icon: 'error'
+                                        });
+                                    }
+                                    else {
+                                        $.ajax({
+                                            url: '/Customer/IsBlackListed',
+                                            type: 'GET',
+                                            dataType: "json",
+                                            contentType: "application/json; charset=utf-8",
+                                            data: {
+                                                value: mnumInput.val(),
+                                                type: 'Mobile',
+                                            },
+                                            success: function (response) {
+                                                console.log("asfdasdf", response)
+
+                                                if (response.isBlackListed) {
+                                                    Swal.fire({
+                                                        title: "Mobile Number is Blacklisted!",
+                                                        allowOutsideClick: true,
+                                                        icon: 'error'
+                                                    });
+                                                }
+                                                else {
+                                                    console.log("saveCustomer", saveCustomer)
+                                                    Swal.fire({ 
+                                                        title: 'Submit',
+                                                        icon: 'question',
+                                                        showCancelButton: true,
+                                                        cancelButtonColor: '#d33',
+                                                        confirmButtonText: 'Yes',
+                                                        showLoaderOnConfirm: true,
+                                                        preConfirm: () => {
+                                                            return new Promise(async (resolve) => {
+                                                                try {
+                                                                    const response = await $.ajax({
+                                                                        type: "POST",
+                                                                        url: "/Customer/CalculateQuote",
+                                                                        data: JSON.stringify(saveCustomer),
+                                                                        contentType: "application/json; charset=utf-8",
+                                                                        dataType: "json",
+                                                                    });
+
+                                                                    // Check if the response is successful and resolve with the message and title
+                                                                    if (response.isSuccess) {
+                                                                        resolve({ message: response.message, icon: 'success', title: "Success!", id: response.id });
+                                                                    } else {
+                                                                        resolve({ message: response.message, icon: 'error', title: "Failed!" });
+                                                                    }
+                                                                } catch (error) {
+                                                                    resolve({ message: "Failed to Save", icon: 'error' });
+                                                                };
+                                                            })
+                                                        },
+                                                        allowOutsideClick: () => !Swal.isLoading()
+                                                    }).then((result) => {
+                                                        const { message, title, icon, id } = result.value;
+
+                                                        // $('#saveModal').modal('show');
+                                                        if (icon == 'success') {
+                                                            Swal.fire({
+                                                                title: title,
+                                                                text: message,
+                                                                allowOutsideClick: false,
+                                                                icon: icon,
+                                                                customClass: {
+                                                                    container: 'custom-swal'
+                                                                }
+                                                            }).then(function () {
+                                                                window.location = "/Customer/Quotation?id=" + id
+
+                                                            });
+                                                        }
+                                                        else {
+                                                            Swal.fire({
+                                                                title: title,
+                                                                text: message,
+                                                                allowOutsideClick: true,
+                                                                icon: icon,
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            },
+                                            error: function (data) {
+                                                Swal.fire({
+                                                    title: "Failed to Check!",
+                                                    allowOutsideClick: true,
+                                                    icon: 'error'
+                                                });
+                                            }
+                                        });
+                                    }
+                                },
+                                error: function (data) {
+                                    Swal.fire({
+                                        title: "Failed to Check!",
+                                        allowOutsideClick: true,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+
+                        }
+                        else {
+                            Swal.fire({
+                                title: "Must Be A Valid Email!",
+                                allowOutsideClick: true,
+                                icon: 'error'
+                            });
+                        }
+
+
+                    }
+                    else {
+                        Swal.fire({
+                            title: "Must Be 18 yrs old to Create a Loan Account!",
+                            allowOutsideClick: true,
+                            icon: 'error'
+                        });
+                    }
+                }
+
+            });
+        });
+
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* <div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UserId" />
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mobile" class="control-label"></label>
+                <input asp-for="Mobile" class="form-control" />
+                <span asp-validation-for="Mobile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Term" class="control-label"></label>
+                <input asp-for="Term" class="form-control" />
+                <span asp-validation-for="Term" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateCreated" class="control-label"></label>
+                <input asp-for="DateCreated" class="form-control" />
+                <span asp-validation-for="DateCreated" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateUpdated" class="control-label"></label>
+                <input asp-for="DateUpdated" class="form-control" />
+                <span asp-validation-for="DateUpdated" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfBirth" class="control-label"></label>
+                <input asp-for="DateOfBirth" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div> *@
